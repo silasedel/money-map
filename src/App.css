@@ -1,0 +1,87 @@
+.app {
+  display: flex;
+  height: 100%;
+  background:
+    radial-gradient(120% 90% at 12% 0%, var(--tint-glow) 0%, transparent 58%),
+    radial-gradient(90% 70% at 92% 8%, var(--tint-hero) 0%, transparent 55%),
+    var(--paper);
+}
+
+.app__main {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+.app__page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Shared page scaffold (scrolling pages) ─────────── */
+
+.page {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.page__head {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 30px 38px 18px;
+  background: linear-gradient(
+    to bottom,
+    var(--head-a) 0%,
+    var(--head-b) 62%,
+    transparent 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  /* the mask keeps the blur from cutting a hard line across content */
+  -webkit-mask-image: linear-gradient(to bottom, #000 74%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 74%, transparent 100%);
+}
+
+.page__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.page__sub {
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: -0.006em;
+}
+
+.page__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding-bottom: 2px;
+}
+
+.page__body {
+  padding: 6px 38px 72px;
+  max-width: 1280px;
+}
+
+@media (max-width: 900px) {
+  .page__head {
+    padding: 24px 22px 16px;
+  }
+  .page__body {
+    padding: 6px 22px 64px;
+  }
+}

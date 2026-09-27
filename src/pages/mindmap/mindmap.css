@@ -1,0 +1,670 @@
+/* ─────────────────────────────────────────────────────
+   Mind Map — infinite canvas, bubbles, connections
+   ───────────────────────────────────────────────────── */
+
+.mm {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.mm__canvas {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  background:
+    radial-gradient(120% 100% at 50% 0%, var(--tint-glow) 0%, transparent 60%),
+    var(--paper);
+}
+
+.mm__canvas:active {
+  cursor: grabbing;
+}
+
+.mm__canvas.is-connecting {
+  cursor: crosshair;
+}
+
+.mm__grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    var(--grid-dot) 1px,
+    transparent 0
+  );
+  background-size: 26px 26px;
+  transition: opacity 0.2s linear;
+}
+
+.mm__world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  overflow: visible;
+  --inv-z: 1;
+}
+
+.mm__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    128% 110% at 50% 46%,
+    transparent 52%,
+    var(--tint-edge) 100%
+  );
+}
+
+/* ── Floating page header ───────────────────────────── */
+
+.mm__head {
+  position: absolute;
+  top: 28px;
+  left: 34px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.mm__headSub {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  letter-spacing: -0.004em;
+}
+
+/* ── Bubbles ────────────────────────────────────────── */
+
+.bub {
+  --bg: var(--bubble-mist-bg);
+  --edge: var(--bubble-mist-edge);
+  --tint: var(--bubble-mist-ink);
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 21px;
+  background-color: var(--bg);
+  background-image: linear-gradient(
+    168deg,
+    var(--gloss) 0%,
+    var(--gloss-mid) 58%,
+    transparent 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px var(--edge),
+    inset 0 1px 0 var(--inset-hi),
+    var(--e-rest);
+  cursor: grab;
+  will-change: transform;
+  transition: box-shadow 0.24s var(--ease-out);
+}
+
+.bub--sand  { --bg: var(--bubble-sand-bg);  --edge: var(--bubble-sand-edge);  --tint: var(--bubble-sand-ink); }
+.bub--sage  { --bg: var(--bubble-sage-bg);  --edge: var(--bubble-sage-edge);  --tint: var(--bubble-sage-ink); }
+.bub--sky   { --bg: var(--bubble-sky-bg);   --edge: var(--bubble-sky-edge);   --tint: var(--bubble-sky-ink); }
+.bub--blush { --bg: var(--bubble-blush-bg); --edge: var(--bubble-blush-edge); --tint: var(--bubble-blush-ink); }
+.bub--lilac { --bg: var(--bubble-lilac-bg); --edge: var(--bubble-lilac-edge); --tint: var(--bubble-lilac-ink); }
+.bub--mist  { --bg: var(--bubble-mist-bg);  --edge: var(--bubble-mist-edge);  --tint: var(--bubble-mist-ink); }
+
+.bub.is-dragging {
+  cursor: grabbing;
+  z-index: 40;
+  box-shadow:
+    inset 0 0 0 1px var(--edge),
+    inset 0 1px 0 var(--inset-hi),
+    var(--e-drag);
+}
+
+.bub.is-selected {
+  z-index: 30;
+  box-shadow:
+    inset 0 0 0 1px var(--edge),
+    inset 0 1px 0 var(--inset-hi),
+    0 0 0 calc(2.2px * var(--inv-z, 1)) var(--sage-edge),
+    var(--e-pick);
+}
+
+.bub.is-target {
+  box-shadow:
+    inset 0 0 0 1px var(--edge),
+    0 0 0 calc(3px * var(--inv-z, 1)) var(--sage),
+    var(--e-pick);
+}
+
+.bub__body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 14px 17px;
+  overflow: hidden;
+}
+
+.bub__text {
+  width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  font-size: 14.5px;
+  font-weight: 520;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  text-align: center;
+  color: var(--tint);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.bub__text.is-empty {
+  color: var(--tint);
+  opacity: 0.38;
+  font-weight: 480;
+}
+
+.bub__input {
+  display: block;
+  resize: none;
+  overflow-y: auto;
+  cursor: text;
+  -webkit-user-select: text;
+  user-select: text;
+  caret-color: var(--sage-deep);
+}
+
+.bub__input::placeholder {
+  color: var(--tint);
+  opacity: 0.34;
+}
+
+.bub.is-editing {
+  cursor: text;
+}
+
+/* ── Connection ports ───────────────────────────────────
+   A connection can be pulled from anywhere along an edge, and attaches
+   wherever the geometry puts it — not to four fixed points. These bands are
+   just the catch area, so they are deliberately generous: 30px straddling the
+   outline, meaning roughly 15px either side of it counts. Only the corners are
+   held back, for resizing, so the two gestures never fight over the same
+   pixels. */
+
+.bub__port {
+  --band: calc(30px * var(--inv-z, 1));
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  cursor: crosshair;
+  border-radius: calc(6px * var(--inv-z, 1));
+  transition: background-color 0.18s var(--ease-out);
+}
+
+/* Lights the whole edge on approach, so it reads as one long grabbable run
+   rather than a dot you have to find. */
+.bub__port:hover {
+  background: var(--sage-wash);
+}
+
+.bub__port--t,
+.bub__port--b {
+  left: calc(14px * var(--inv-z, 1));
+  right: calc(14px * var(--inv-z, 1));
+  height: var(--band);
+}
+.bub__port--t { top: calc(var(--band) / -2); }
+.bub__port--b { bottom: calc(var(--band) / -2); }
+
+.bub__port--l,
+.bub__port--r {
+  top: calc(14px * var(--inv-z, 1));
+  bottom: calc(14px * var(--inv-z, 1));
+  width: var(--band);
+}
+.bub__port--l { left: calc(var(--band) / -2); }
+.bub__port--r { right: calc(var(--band) / -2); }
+
+.bub__portDot {
+  --d: calc(9px * var(--inv-z, 1));
+  width: var(--d);
+  height: var(--d);
+  border-radius: 50%;
+  background: var(--surface-raised);
+  box-shadow:
+    0 0 0 calc(1.5px * var(--inv-z, 1)) var(--sage),
+    0 calc(1px * var(--inv-z, 1)) calc(3px * var(--inv-z, 1)) rgba(0, 0, 0, 0.22);
+  opacity: 0.62;
+  transition:
+    opacity 0.16s var(--ease-out),
+    transform 0.24s var(--ease-spring),
+    background-color 0.16s var(--ease-out);
+}
+
+.bub__port:hover .bub__portDot {
+  opacity: 1;
+  transform: scale(1.45);
+  background: var(--sage);
+  box-shadow:
+    0 0 0 calc(1.5px * var(--inv-z, 1)) var(--sage-deep),
+    0 0 0 calc(4px * var(--inv-z, 1)) var(--sage-wash);
+}
+
+/* A bubble in range of a release reads as the catch, including from the
+   slack outside its edge. */
+.bub.is-target {
+  cursor: crosshair;
+}
+
+/* ── Resize grips — corners only ────────────────────── */
+
+.bub__grip {
+  --g: calc(16px * var(--inv-z, 1));
+  position: absolute;
+  z-index: 4;
+  width: var(--g);
+  height: var(--g);
+  display: grid;
+  place-items: center;
+}
+
+.bub__grip--nw { top: calc(var(--g) / -2.4); left: calc(var(--g) / -2.4); cursor: nwse-resize; }
+.bub__grip--ne { top: calc(var(--g) / -2.4); right: calc(var(--g) / -2.4); cursor: nesw-resize; }
+.bub__grip--sw { bottom: calc(var(--g) / -2.4); left: calc(var(--g) / -2.4); cursor: nesw-resize; }
+.bub__grip--se { bottom: calc(var(--g) / -2.4); right: calc(var(--g) / -2.4); cursor: nwse-resize; }
+
+.bub__grip span {
+  width: calc(9px * var(--inv-z, 1));
+  height: calc(9px * var(--inv-z, 1));
+  border-radius: calc(3px * var(--inv-z, 1));
+  background: var(--surface-raised);
+  box-shadow:
+    0 0 0 calc(1.5px * var(--inv-z, 1)) var(--edge),
+    0 calc(1px * var(--inv-z, 1)) calc(3px * var(--inv-z, 1)) rgba(0, 0, 0, 0.22);
+  transition:
+    background-color 0.16s,
+    transform 0.24s var(--ease-spring);
+}
+
+.bub__grip:hover span {
+  transform: scale(1.25);
+  background: var(--sage);
+  box-shadow: 0 0 0 calc(1.5px * var(--inv-z, 1)) var(--sage-deep);
+}
+
+/* ── Bubble toolbar ─────────────────────────────────── */
+
+.bub__bar {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 7px;
+  margin-bottom: calc(11px * var(--inv-z, 1));
+  border-radius: var(--r-pill);
+  background: var(--veil-strong);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  box-shadow: var(--e-float);
+  /* framer-motion owns this element's `transform`, so centring and the
+     counter-scale ride on the individual `translate`/`scale` properties —
+     they compose with `transform` instead of fighting it. */
+  translate: -50% 0;
+  scale: var(--inv-z, 1);
+  transform-origin: bottom center;
+}
+
+.bub__swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 1px var(--hairline-strong),
+    inset 0 1px 0 var(--gloss);
+  transition: transform 0.22s var(--ease-spring), box-shadow 0.18s var(--ease-out);
+}
+
+.bub__swatch:hover {
+  transform: scale(1.16);
+}
+
+.bub__swatch.is-on {
+  box-shadow:
+    inset 0 0 0 1px var(--hairline-strong),
+    0 0 0 2px var(--surface-raised),
+    0 0 0 3.6px var(--ink-3);
+}
+
+.bub__swatch--sand  { background: var(--bubble-sand-bg); }
+.bub__swatch--sage  { background: var(--bubble-sage-bg); }
+.bub__swatch--sky   { background: var(--bubble-sky-bg); }
+.bub__swatch--blush { background: var(--bubble-blush-bg); }
+.bub__swatch--lilac { background: var(--bubble-lilac-bg); }
+.bub__swatch--mist  { background: var(--bubble-mist-bg); }
+
+.bub__barDiv {
+  width: 1px;
+  height: 16px;
+  margin: 0 1px;
+  background: var(--hairline-strong);
+}
+
+.bub__del {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  color: var(--ink-3);
+  transition: color 0.16s, background-color 0.16s;
+}
+
+.bub__del:hover {
+  color: var(--clay-deep);
+  background: var(--clay-wash);
+}
+
+/* ── Edges ──────────────────────────────────────────── */
+
+.edges {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.edge__halo {
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 6;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+
+.edge__line {
+  fill: none;
+  stroke: url(#edgeInk);
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  opacity: 0.62;
+  transition: stroke-width 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
+}
+
+.edge__cap {
+  fill: var(--edge-ink-a);
+  opacity: 0.55;
+}
+
+.edge__hit {
+  fill: none;
+  stroke: transparent;
+  /* Generous on purpose — a 2px line is not a realistic click target. */
+  stroke-width: 28;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+.edge.is-focus .edge__line {
+  opacity: 0.95;
+  stroke-width: 2.7;
+}
+
+.edge.is-selected .edge__line {
+  stroke: var(--clay);
+  opacity: 1;
+  stroke-width: 2.9;
+}
+
+.edge.is-selected .edge__cap {
+  fill: var(--clay);
+  opacity: 0.9;
+}
+
+/* The raw stroke while drawing. Deliberately sketchy — it reads as ink, so
+   the snap to a clean curve on release lands as a resolution. */
+.edge__ink {
+  fill: none;
+  stroke: var(--sage);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.55;
+  stroke-dasharray: 1 6;
+  pointer-events: none;
+}
+
+.edgeKnob {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 45;
+  width: 0;
+  height: 0;
+}
+
+.edgeKnob__btn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--clay-deep);
+  background: var(--surface-raised);
+  box-shadow:
+    0 0 0 1px var(--clay-edge),
+    0 3px 10px rgba(0, 0, 0, 0.24);
+  transform: translate(-50%, -50%) scale(var(--inv-z, 1));
+  transition: background-color 0.16s, color 0.16s;
+}
+
+.edgeKnob__btn:hover {
+  color: var(--paper);
+  background: var(--clay);
+}
+
+/* ── Empty state ────────────────────────────────────── */
+
+.mm__blank {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 340px;
+  margin: -160px 0 0 -170px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.mm__blankArt {
+  position: relative;
+  width: 180px;
+  height: 96px;
+  margin-bottom: 22px;
+}
+
+.mm__blankBub {
+  position: absolute;
+  border-radius: 14px;
+  box-shadow:
+    inset 0 0 0 1px var(--hairline),
+    var(--e-1);
+  animation: mmFloat 7s var(--ease-in-out) infinite;
+}
+
+.mm__blankBub--a {
+  top: 16px;
+  left: 12px;
+  width: 62px;
+  height: 34px;
+  background: var(--bubble-sage-bg);
+}
+.mm__blankBub--b {
+  top: 38px;
+  right: 16px;
+  width: 56px;
+  height: 30px;
+  background: var(--bubble-sky-bg);
+  animation-delay: -2.3s;
+}
+.mm__blankBub--c {
+  bottom: 8px;
+  left: 52px;
+  width: 48px;
+  height: 27px;
+  background: var(--bubble-sand-bg);
+  animation-delay: -4.6s;
+}
+
+@keyframes mmFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(-1.1deg); }
+}
+
+.mm__blankLines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--sketch-ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 2 6;
+}
+
+.mm__blankTitle {
+  font-size: 17px;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.mm__blankText {
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  max-width: 290px;
+}
+
+.mm__blankBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  margin-top: 20px;
+  padding: 0 16px;
+  border-radius: var(--r-pill);
+  font-size: 13.5px;
+  font-weight: 570;
+  letter-spacing: -0.011em;
+  color: var(--ink);
+  background: var(--surface-raised);
+  box-shadow: var(--e-2), 0 0 0 1px var(--hairline);
+  pointer-events: auto;
+  transition: box-shadow 0.2s var(--ease-out), transform 0.24s var(--ease-spring);
+}
+
+.mm__blankBtn:hover {
+  transform: translateY(-1.5px);
+  box-shadow: var(--e-3), 0 0 0 1px var(--hairline-strong);
+}
+.mm__blankBtn:active {
+  transform: scale(0.97);
+}
+
+/* ── Dock ───────────────────────────────────────────── */
+
+.mm__dock {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  translate: -50% 0; /* `transform` belongs to framer here */
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 6px;
+  border-radius: var(--r-pill);
+  background: var(--veil-strong);
+  backdrop-filter: blur(22px) saturate(1.7);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7);
+  box-shadow: var(--e-float);
+}
+
+.mm__dockBtn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: var(--ink-2);
+  transition:
+    background-color 0.18s var(--ease-out),
+    color 0.18s var(--ease-out),
+    transform 0.24s var(--ease-spring);
+}
+
+.mm__dockBtn:hover {
+  color: var(--ink);
+  background: var(--hover-wash);
+}
+
+.mm__dockBtn:active {
+  transform: scale(0.9);
+}
+
+.mm__dockBtn:disabled {
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.mm__dockBtn--primary {
+  color: var(--btn-ink);
+  background: linear-gradient(175deg, var(--btn-a) 0%, var(--btn-b) 45%, var(--btn-c) 100%);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.18),
+    0 4px 12px var(--btn-glow),
+    inset 0 1px 0 var(--gloss-mid);
+}
+
+.mm__dockBtn--primary:hover {
+  color: var(--btn-ink);
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.mm__dockZoom {
+  min-width: 50px;
+  height: 34px;
+  padding: 0 4px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px;
+  font-weight: 580;
+  color: var(--ink-2);
+  transition: background-color 0.18s, color 0.18s;
+}
+
+.mm__dockZoom:hover {
+  color: var(--ink);
+  background: var(--hover-wash);
+}
+
+.mm__dockDiv {
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: var(--hairline-strong);
+}

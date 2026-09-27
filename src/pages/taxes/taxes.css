@@ -1,0 +1,178 @@
+/* ─────────────────────────────────────────────────────
+   Taxes — deductible figures, quarters, tags
+   ───────────────────────────────────────────────────── */
+
+.tx__blank {
+  margin-top: 8px;
+  padding: 18px;
+}
+.tx__blank strong {
+  color: var(--ink);
+  font-weight: 620;
+}
+.tx__blankActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.tx__years {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  background: var(--paper-deep);
+  box-shadow: inset 0 0 0 1px var(--hairline-soft);
+}
+.tx__year {
+  position: relative;
+  padding: 0 12px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+  transition: color 0.18s;
+}
+.tx__year span:last-child {
+  position: relative;
+  z-index: 1;
+}
+.tx__year.is-on {
+  color: var(--ink);
+}
+.tx__yearThumb {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  background: var(--surface-raised);
+  box-shadow: var(--e-1), 0 0 0 1px var(--hairline);
+}
+
+.tx__tiles {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+@media (max-width: 1000px) {
+  .tx__tiles {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tx__hero {
+    grid-column: span 2;
+  }
+}
+
+.tx__hero {
+  background:
+    linear-gradient(168deg, var(--gloss-strong) 0%, transparent 62%),
+    linear-gradient(160deg, var(--amber-wash) 0%, var(--surface) 58%);
+}
+.tx__heroValue {
+  color: var(--amber-deep);
+}
+
+.tx__split {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 12px;
+  margin-top: 12px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .tx__split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Quarters ───────────────────────────────────────── */
+
+.tx__quarters {
+  padding-bottom: 16px;
+}
+.tx__qGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 16px 20px 0;
+}
+.tx__q {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.tx__qAmt {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.tx__qBarWrap {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 44px;
+  height: 92px;
+  border-radius: 8px;
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.tx__qBar {
+  display: block;
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, var(--amber) 0%, var(--amber-deep) 100%);
+}
+.tx__qLabel {
+  font-size: 11px;
+  font-weight: 620;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+/* ── Tags ───────────────────────────────────────────── */
+
+.tx__tags {
+  padding: 6px 0 8px;
+}
+.tx__tagList {
+  padding: 4px 10px 0;
+}
+.tx__tagRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 46px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  text-align: left;
+  transition: background-color 0.16s;
+}
+.tx__tagRow:hover {
+  background: var(--surface-sunken);
+}
+.tx__tagCount {
+  flex: 1;
+  font-size: 12px;
+  color: var(--ink-4);
+}
+.tx__tagSums {
+  display: inline-flex;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.tx__tagSums .is-in {
+  color: var(--sage-deep);
+}
+.tx__tagGo {
+  color: var(--ink-4);
+  opacity: 0;
+  transition: opacity 0.16s;
+}
+.tx__tagRow:hover .tx__tagGo {
+  opacity: 1;
+}

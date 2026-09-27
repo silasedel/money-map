@@ -1,0 +1,295 @@
+/* ─────────────────────────────────────────────────────
+   Spending — budget rings, offers, trends
+   ───────────────────────────────────────────────────── */
+
+.sp__blank {
+  margin-top: 8px;
+  padding: 18px;
+}
+
+/* ── Offer (no budgets yet) ─────────────────────────── */
+
+.sp__offer {
+  padding-bottom: 8px;
+}
+.sp__offerHead {
+  padding: 18px 20px 4px;
+}
+.sp__offerSub {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  max-width: 480px;
+}
+.sp__offerList {
+  padding: 10px 10px 0;
+}
+.sp__offerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  transition: background-color 0.16s;
+}
+.sp__offerRow:hover {
+  background: var(--surface-sunken);
+}
+.sp__offerLabel {
+  flex: 1;
+  font-size: 13.5px;
+  font-weight: 540;
+  color: var(--ink);
+}
+.sp__offerAvg {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.sp__offerFoot {
+  padding: 6px 14px 8px;
+}
+
+/* ── Budget grid ────────────────────────────────────── */
+
+.sp__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+
+.sp__budget {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 0.24s var(--ease-out);
+}
+.sp__budget:hover {
+  box-shadow: var(--e-3), 0 0 0 1px var(--hairline-strong);
+}
+.sp__budget--hero {
+  grid-column: 1 / -1;
+  padding: 20px 22px;
+  background:
+    linear-gradient(168deg, var(--gloss-strong) 0%, transparent 58%),
+    linear-gradient(158deg, var(--tint-hero) 0%, var(--surface) 56%);
+}
+.sp__budget--over.sp__budget--hero {
+  background:
+    linear-gradient(168deg, var(--gloss-strong) 0%, transparent 58%),
+    linear-gradient(158deg, var(--clay-wash) 0%, var(--surface) 60%);
+}
+
+.sp__pct {
+  font-size: 12.5px;
+  font-weight: 640;
+  color: var(--ink);
+}
+.sp__pct.is-hero {
+  font-size: 17px;
+}
+
+.sp__budgetMain {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.sp__budgetTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sp__budgetLabel {
+  font-size: 14.5px;
+  font-weight: 620;
+  letter-spacing: -0.016em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sp__budget--hero .sp__budgetLabel {
+  font-size: 17px;
+}
+
+.sp__state {
+  flex: none;
+  height: 20px;
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 640;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.sp__state--ok    { color: var(--sage-deep);  background: var(--sage-wash); }
+.sp__state--ahead { color: var(--amber-deep); background: var(--amber-wash); }
+.sp__state--warn  { color: var(--amber-deep); background: var(--amber-wash); }
+.sp__state--over  { color: var(--clay-deep);  background: var(--clay-wash); }
+
+.sp__budgetFig {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.sp__budgetFig strong {
+  font-size: 16px;
+  font-weight: 620;
+  color: var(--ink);
+}
+.sp__budget--hero .sp__budgetFig strong {
+  font-size: 22px;
+}
+.sp__budgetPer {
+  color: var(--ink-4);
+}
+
+.sp__budgetLeft {
+  font-size: 11.5px;
+  color: var(--ink-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sp__budgetLeft .is-over {
+  color: var(--clay-deep);
+  font-weight: 600;
+}
+
+/* ── Not budgeted chips ─────────────────────────────── */
+
+.sp__more {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding: 4px 2px 0;
+}
+.sp__moreTitle {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.026em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.sp__moreChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sp__moreChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 11px 0 9px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px;
+  font-weight: 560;
+  color: var(--ink-2);
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--hairline);
+  transition: box-shadow 0.16s, color 0.16s;
+}
+.sp__moreChip:hover {
+  color: var(--ink);
+  box-shadow: 0 0 0 1px var(--hairline-strong), var(--e-1);
+}
+.sp__moreChip .num {
+  color: var(--ink-4);
+  font-size: 11.5px;
+}
+
+/* ── Where + trends ─────────────────────────────────── */
+
+.sp__split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+@media (max-width: 960px) {
+  .sp__split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sp__trends {
+  padding: 6px 0 8px;
+}
+.sp__trendList {
+  padding: 4px 10px 0;
+}
+.sp__trendOpen {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  height: 50px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  text-align: left;
+  transition: background-color 0.16s;
+}
+.sp__trendOpen:hover {
+  background: var(--surface-sunken);
+}
+.sp__trendMain {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+.sp__trendLabel {
+  font-size: 13.5px;
+  font-weight: 540;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sp__trendAvg {
+  font-size: 11.5px;
+  color: var(--ink-4);
+}
+
+.sp__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 26px;
+  flex: none;
+}
+.sp__barSlot {
+  display: flex;
+  align-items: flex-end;
+  width: 8px;
+  height: 100%;
+}
+.sp__bar {
+  display: block;
+  width: 100%;
+  border-radius: 3px 3px 1px 1px;
+  background: var(--ink-4);
+  opacity: 0.6;
+}
+.sp__bar.is-last {
+  background: var(--outflow);
+  opacity: 1;
+}
+.sp__trendOpen .chip {
+  flex: none;
+  min-width: 58px;
+  justify-content: center;
+}

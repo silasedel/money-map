@@ -1,0 +1,347 @@
+.sb {
+  position: relative;
+  flex: none;
+  height: 100%;
+  background: var(--veil);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border-right: 1px solid var(--hairline);
+  z-index: 30;
+}
+
+.sb__inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 14px 12px 14px;
+  overflow: hidden;
+}
+
+/* ── Brand ──────────────────────────────────────────── */
+
+.sb__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 42px;
+  padding: 0 6px;
+  margin-bottom: 18px;
+  flex: none;
+}
+
+/* The logo supplies its own tile, so this only sizes and lifts it. */
+.sb__mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  box-shadow: var(--e-1);
+}
+
+.sb__mark svg {
+  display: block;
+  border-radius: 10px;
+}
+
+.sb__wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.sb__name {
+  font-size: 14.5px;
+  font-weight: 620;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+}
+
+/* ── Nav ────────────────────────────────────────────── */
+
+.sb__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sb__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  white-space: nowrap;
+  transition: color 0.18s var(--ease-out);
+}
+
+.sb__item::after {
+  /* hover wash sits under the label but over the active pill's shadow */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--hover-wash);
+  opacity: 0;
+  transition: opacity 0.18s var(--ease-out);
+}
+
+.sb__item:hover::after {
+  opacity: 1;
+}
+
+.sb__item.is-active::after {
+  opacity: 0;
+}
+
+.sb__item.is-active {
+  color: var(--ink);
+}
+
+.sb__item:active {
+  transform: scale(0.985);
+}
+
+.sb__pill {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-sm);
+  background: var(--surface-raised);
+  box-shadow: var(--e-2), 0 0 0 1px var(--hairline);
+}
+
+.sb__icon,
+.sb__label {
+  position: relative;
+  z-index: 1;
+}
+
+.sb__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  color: inherit;
+  opacity: 0.82;
+}
+
+.sb__item.is-active .sb__icon {
+  color: var(--sage-deep);
+  opacity: 1;
+}
+
+.sb__label {
+  font-size: 13.5px;
+  font-weight: 520;
+  letter-spacing: -0.011em;
+}
+
+.sb--collapsed .sb__item {
+  justify-content: center;
+  padding: 0;
+}
+
+.sb--collapsed .sb__brand {
+  justify-content: center;
+  padding: 0;
+}
+
+.sb__spacer {
+  flex: 1;
+}
+
+/* ── Settings ───────────────────────────────────────── */
+
+.sb__settings {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  height: 38px;
+  margin-bottom: 4px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  white-space: nowrap;
+  transition: color 0.18s var(--ease-out), background-color 0.18s var(--ease-out);
+}
+
+.sb__settings:hover {
+  color: var(--ink);
+  background: var(--hover-wash);
+}
+
+.sb__settings.is-collapsed {
+  justify-content: center;
+  padding: 0;
+}
+
+/* ── Footer ─────────────────────────────────────────── */
+
+.sb__foot {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px;
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  white-space: nowrap;
+}
+
+.sb__dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: var(--sage);
+  box-shadow: 0 0 0 3px var(--sage-wash);
+  animation: sbPulse 3.4s var(--ease-in-out) infinite;
+}
+
+@keyframes sbPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.sb__footText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 11.5px;
+  font-weight: 540;
+  color: var(--ink-2);
+}
+
+.sb__footMeta {
+  font-size: 10.5px;
+  font-weight: 480;
+  color: var(--ink-4);
+}
+
+/* ── Collapse handle ────────────────────────────────── */
+
+.sb__toggle {
+  position: absolute;
+  top: 26px;
+  right: -11px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--ink-3);
+  background: var(--surface-raised);
+  box-shadow: var(--e-2), 0 0 0 1px var(--hairline);
+  opacity: 0;
+  transform: scale(0.8);
+  transition:
+    opacity 0.2s var(--ease-out),
+    transform 0.28s var(--ease-spring),
+    color 0.18s var(--ease-out);
+}
+
+.sb:hover .sb__toggle,
+.sb__toggle:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.sb__toggle:hover {
+  color: var(--ink);
+}
+
+.sb__toggle:active {
+  transform: scale(0.9);
+}
+
+/* ── Quick add ──────────────────────────────────────── */
+
+.sb__add {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  height: 38px;
+  margin-bottom: 14px;
+  padding: 0 10px 0 9px;
+  border-radius: var(--r-sm);
+  color: var(--btn-ink);
+  white-space: nowrap;
+  background: linear-gradient(175deg, var(--btn-a) 0%, var(--btn-b) 45%, var(--btn-c) 100%);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.16),
+    0 4px 12px var(--btn-glow),
+    inset 0 1px 0 var(--gloss-mid);
+  transition: box-shadow 0.18s var(--ease-out);
+}
+.sb__add:hover {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.18),
+    0 8px 20px var(--btn-glow),
+    inset 0 1px 0 var(--gloss);
+}
+.sb__add.is-collapsed {
+  justify-content: center;
+  padding: 0;
+}
+.sb__add .sb__label {
+  font-weight: 600;
+  color: var(--btn-ink);
+}
+.sb__addIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.18);
+}
+.sb__kbd {
+  margin-left: auto;
+  font-family: var(--font-num);
+  font-size: 10.5px;
+  font-weight: 640;
+  padding: 1px 5px;
+  border-radius: 5px;
+  color: var(--btn-ink);
+  background: rgba(0, 0, 0, 0.16);
+  opacity: 0.85;
+}
+
+/* ── Sections ───────────────────────────────────────── */
+
+.sb__section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sb__section + .sb__section {
+  margin-top: 10px;
+}
+.sb__sectionLabel {
+  display: block;
+  padding: 0 10px;
+  margin-bottom: 4px;
+  font-size: 10.5px;
+  font-weight: 640;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.sb__sectionRule {
+  display: block;
+  height: 1px;
+  margin: 2px 14px 6px;
+  background: var(--hairline);
+}
+.sb__section:first-child .sb__sectionRule {
+  display: none;
+}

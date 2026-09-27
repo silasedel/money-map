@@ -1,0 +1,232 @@
+.set {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.set__group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.set__label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.028em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.set__note {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-4);
+}
+
+.set__note--tight {
+  margin-top: 2px;
+  max-width: 30ch;
+}
+
+.set__stat {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+/* ── Choice tiles ───────────────────────────────────── */
+
+.set__choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.set__choices--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.set__choice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 10px 11px 11px;
+  border-radius: var(--r-sm);
+  text-align: left;
+  background: var(--paper-deep);
+  box-shadow: inset 0 0 0 1px var(--hairline-soft);
+  transition: box-shadow 0.18s var(--ease-out), background-color 0.18s var(--ease-out);
+}
+
+.set__choice:hover {
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+.set__choice.is-on {
+  background: var(--surface-raised);
+}
+
+.set__choice--wide {
+  flex-direction: column;
+}
+
+.set__choiceLabel {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  font-weight: 570;
+  letter-spacing: -0.008em;
+  color: var(--ink);
+}
+
+.set__choiceHint {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  color: var(--ink-4);
+}
+
+.set__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-sm);
+  box-shadow:
+    inset 0 0 0 1px var(--sage-edge),
+    0 0 0 3px var(--sage-wash);
+}
+
+/* Little previews of the two grounds, so the choice is visible not just named */
+.set__swatch {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 26px;
+  margin-bottom: 6px;
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+.set__swatch--light {
+  background: linear-gradient(150deg, #faf6f0 0%, #efe9df 100%);
+}
+
+.set__swatch--dark {
+  background: linear-gradient(150deg, #2b2721 0%, #14120d 100%);
+}
+
+.set__swatch--system {
+  background: linear-gradient(105deg, #faf6f0 0% 50%, #14120d 50% 100%);
+}
+
+/* ── Currency ───────────────────────────────────────── */
+
+.set__row {
+  display: flex;
+  gap: 8px;
+}
+
+.set__select {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  padding-right: 34px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%),
+    linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+  background-position: calc(100% - 17px) 18px, calc(100% - 12px) 18px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+/* ── Data ───────────────────────────────────────────── */
+
+.set__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+/* ── Reset ──────────────────────────────────────────── */
+
+.set__group--danger {
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+}
+
+.set__dangerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.set__label--danger {
+  color: var(--clay-deep);
+}
+
+.set__danger {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 11px;
+  border-radius: var(--r-xs);
+  font-size: 12.5px;
+  font-weight: 560;
+  color: var(--clay-deep);
+  background: var(--clay-wash);
+  transition: background-color 0.16s, box-shadow 0.16s;
+}
+
+.set__danger:hover {
+  box-shadow: inset 0 0 0 1px var(--clay-edge);
+}
+
+.set__confirm {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.set__cancel {
+  height: 30px;
+  padding: 0 10px;
+  border-radius: var(--r-xs);
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--ink-2);
+  transition: background-color 0.16s;
+}
+
+.set__cancel:hover {
+  background: var(--hover-wash);
+}
+
+.set__wipe {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--r-xs);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--btn-ink);
+  background: linear-gradient(175deg, var(--clay) 0%, var(--clay-deep) 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  transition: filter 0.16s;
+}
+
+.set__wipe:hover {
+  filter: brightness(1.06);
+}
+
+.set__notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: auto;
+  font-size: 12px;
+  font-weight: 540;
+  color: var(--sage-deep);
+}

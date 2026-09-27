@@ -1,0 +1,323 @@
+/* ─────────────────────────────────────────────────────────────
+   Money Map — design tokens
+   A warm, papery light theme. Beige ground, ink type,
+   muted sage + dusk blue accents, clay for outflow.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Ground & surfaces ─────────────────────────────── */
+  --paper: #f4efe7; /* app background — warm beige */
+  --paper-deep: #ece5da; /* recessed wells, canvas */
+  --surface: #fbf8f3; /* cards, panels */
+  --surface-raised: #ffffff; /* modals, popovers, floating */
+  --surface-sunken: rgba(46, 41, 34, 0.035);
+  --scrim: rgba(38, 33, 27, 0.28);
+
+  /* Translucent chrome — sidebar, toolbars */
+  --veil: rgba(251, 248, 243, 0.72);
+  --veil-strong: rgba(251, 248, 243, 0.92);
+
+  /* ── Ink ───────────────────────────────────────────── */
+  --ink: #2c2823; /* primary text — warm near-black */
+  --ink-2: #635b50; /* secondary */
+  --ink-3: #948b7d; /* tertiary, meta */
+  --ink-4: #b5ac9d; /* faintest, placeholders */
+
+  /* ── Lines ─────────────────────────────────────────── */
+  --hairline: rgba(44, 40, 35, 0.08);
+  --hairline-strong: rgba(44, 40, 35, 0.14);
+  --hairline-soft: rgba(44, 40, 35, 0.045);
+
+  /* ── Accents ───────────────────────────────────────── */
+  --sage: #6f8f73; /* muted green — primary accent */
+  --sage-deep: #587459;
+  --sage-wash: rgba(111, 143, 115, 0.12);
+  --sage-edge: rgba(111, 143, 115, 0.28);
+
+  --dusk: #7a93b6; /* subtle blue — secondary accent */
+  --dusk-deep: #5f7897;
+  --dusk-wash: rgba(122, 147, 182, 0.12);
+  --dusk-edge: rgba(122, 147, 182, 0.3);
+
+  --clay: #c07f62; /* outflow / expense */
+  --clay-deep: #a2664b;
+  --clay-wash: rgba(192, 127, 98, 0.12);
+  --clay-edge: rgba(192, 127, 98, 0.28);
+
+  --amber: #c49a5a; /* attention, streaks */
+  --amber-wash: rgba(196, 154, 90, 0.13);
+
+  /* ── Radii ─────────────────────────────────────────── */
+  --r-xs: 8px;
+  --r-sm: 11px;
+  --r-md: 15px;
+  --r-lg: 20px;
+  --r-xl: 26px;
+  --r-2xl: 32px;
+  --r-pill: 999px;
+
+  /* ── Elevation — warm-tinted, layered, never harsh ─── */
+  --e-0: 0 1px 1px rgba(58, 48, 35, 0.03);
+  --e-1: 0 1px 2px rgba(58, 48, 35, 0.05), 0 2px 6px rgba(58, 48, 35, 0.035);
+  --e-2: 0 1px 2px rgba(58, 48, 35, 0.05), 0 4px 12px rgba(58, 48, 35, 0.055),
+    0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  --e-3: 0 2px 4px rgba(58, 48, 35, 0.05), 0 10px 26px rgba(58, 48, 35, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  --e-4: 0 4px 8px rgba(58, 48, 35, 0.06), 0 18px 44px rgba(58, 48, 35, 0.11),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  --e-lift: 0 8px 16px rgba(58, 48, 35, 0.07), 0 28px 60px rgba(58, 48, 35, 0.13);
+
+  --ring: 0 0 0 3.5px rgba(111, 143, 115, 0.22);
+  --ring-dusk: 0 0 0 3.5px rgba(122, 147, 182, 0.24);
+
+  /* ── Type ──────────────────────────────────────────── */
+  --font: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-num: ui-rounded, -apple-system, 'SF Pro Rounded', 'Inter', system-ui,
+    sans-serif;
+
+  /* ── Motion ────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  /* ── Layout ────────────────────────────────────────── */
+  --sidebar-w: 244px;
+  --sidebar-w-collapsed: 68px;
+
+  /* ── Surface tints ─────────────────────────────────────
+     Named so dark mode can restate them rather than every card inventing
+     its own literal gradient. */
+  --tint-hero: #f2f5f0; /* accent-washed card ground */
+  --tint-glow: #f8f4ed; /* the light at the top of the canvas */
+  --tint-edge: rgba(236, 229, 218, 0.55); /* canvas vignette */
+  --mark-top: #ffffff;
+  --mark-bottom: #eef2ec;
+  --logo-a: #7c9a80;
+  --logo-b: #4e6c51;
+  /* The sticky page header's fade — the paper colour, carrying alpha. */
+  --head-a: rgba(244, 239, 231, 0.94);
+  --head-b: rgba(244, 239, 231, 0.86);
+
+  /* ── Chart colour ──────────────────────────────────────
+     Validated against the light card surface (#FBF8F3): lightness band,
+     chroma floor, colour-vision separation (worst adjacent pair ΔE 17.3
+     protan) and the normal-vision floor (ΔE 26.7). Expressed as custom
+     properties so SVG marks and HTML swatches both re-theme in one paint. */
+  --cat-1: #2e8259; /* green */
+  --cat-2: #e2a230; /* gold */
+  --cat-3: #2a6fa4; /* blue */
+  --cat-4: #de7f60; /* terracotta */
+  --cat-5: #7150a8; /* violet */
+  --cat-6: #3fbca6; /* teal */
+  --cat-other: #a8a196; /* the tail bucket — deliberately not an identity */
+
+  --inflow: #2e8259;
+  --outflow: #de7f60;
+  --edge-ink-a: #8d9c8e;
+  --edge-ink-b: #8d97a8;
+
+  /* ── Material ──────────────────────────────────────────
+     The top-lit sheen, hover washes and grid ink. Dark restates all of
+     them; nothing below this line should hardcode a colour. */
+  --gloss: rgba(255, 255, 255, 0.62);
+  --gloss-strong: rgba(255, 255, 255, 0.9);
+  --gloss-mid: rgba(255, 255, 255, 0.5);
+  --inset-hi: rgba(255, 255, 255, 0.7);
+  --hover-wash: rgba(44, 40, 35, 0.05);
+  --hover-wash-strong: rgba(44, 40, 35, 0.075);
+  --grid-dot: rgba(44, 40, 35, 0.115);
+  --sketch-ink: rgba(44, 40, 35, 0.16);
+  --scroll-thumb: rgba(44, 40, 35, 0.14);
+  --scroll-thumb-hover: rgba(44, 40, 35, 0.24);
+  --amber-deep: #9c763b;
+  --grain-blend: multiply;
+  --grain-opacity: 0.32;
+
+  /* Primary button — a real green in both modes rather than a tinted accent */
+  --btn-a: #7d9a80;
+  --btn-b: #6f8f73;
+  --btn-c: #61805f;
+  --btn-ink: #ffffff;
+  --btn-glow: rgba(88, 116, 89, 0.24);
+
+  --e-modal: 0 0 0 1px rgba(44, 40, 35, 0.06),
+    0 24px 70px rgba(38, 33, 27, 0.24), 0 6px 16px rgba(38, 33, 27, 0.1);
+  --e-float: 0 0 0 1px var(--hairline), 0 2px 6px rgba(58, 48, 35, 0.07),
+    0 14px 34px rgba(58, 48, 35, 0.13);
+  --e-drag: 0 10px 22px rgba(58, 48, 35, 0.1), 0 26px 56px rgba(58, 48, 35, 0.14);
+  --e-rest: 0 1px 2px rgba(58, 48, 35, 0.06), 0 5px 16px rgba(58, 48, 35, 0.075);
+  --e-pick: 0 2px 6px rgba(58, 48, 35, 0.07), 0 12px 30px rgba(58, 48, 35, 0.1);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Dark — not an inversion. The ground stays warm (espresso rather
+   than slate), the ink stays cream rather than white, and the
+   accents are re-stepped for a dark surface instead of reused.
+   ───────────────────────────────────────────────────────────── */
+
+:root[data-theme='dark'] {
+  --paper: #17150f;
+  --paper-deep: #100e0a;
+  --surface: #201d17;
+  --surface-raised: #292520;
+  --surface-sunken: rgba(255, 246, 230, 0.045);
+  --scrim: rgba(10, 8, 5, 0.58);
+
+  --veil: rgba(32, 29, 23, 0.78);
+  --veil-strong: rgba(35, 32, 26, 0.94);
+
+  --ink: #f1ece1;
+  --ink-2: #bdb4a4;
+  --ink-3: #8d8578;
+  --ink-4: #665f54;
+
+  --hairline: rgba(255, 244, 224, 0.09);
+  --hairline-strong: rgba(255, 244, 224, 0.16);
+  --hairline-soft: rgba(255, 244, 224, 0.05);
+
+  --sage: #8bab8e;
+  --sage-deep: #a3c0a5;
+  --sage-wash: rgba(139, 171, 142, 0.16);
+  --sage-edge: rgba(139, 171, 142, 0.34);
+
+  --dusk: #93aacc;
+  --dusk-deep: #adc0dc;
+  --dusk-wash: rgba(147, 170, 204, 0.16);
+  --dusk-edge: rgba(147, 170, 204, 0.34);
+
+  --clay: #d3937a;
+  --clay-deep: #e0a992;
+  --clay-wash: rgba(211, 147, 122, 0.16);
+  --clay-edge: rgba(211, 147, 122, 0.34);
+
+  --amber: #d6ab6d;
+  --amber-wash: rgba(214, 171, 109, 0.16);
+
+  /* Shadows do almost nothing on a dark ground — depth comes from the
+     hairlines and the raised surface steps instead. */
+  --e-0: 0 1px 1px rgba(0, 0, 0, 0.2);
+  --e-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.22);
+  --e-2: 0 1px 2px rgba(0, 0, 0, 0.32), 0 4px 12px rgba(0, 0, 0, 0.28),
+    0 1px 0 rgba(255, 244, 224, 0.05) inset;
+  --e-3: 0 2px 4px rgba(0, 0, 0, 0.34), 0 10px 26px rgba(0, 0, 0, 0.36),
+    0 1px 0 rgba(255, 244, 224, 0.06) inset;
+  --e-4: 0 4px 8px rgba(0, 0, 0, 0.36), 0 18px 44px rgba(0, 0, 0, 0.44),
+    0 1px 0 rgba(255, 244, 224, 0.07) inset;
+  --e-lift: 0 8px 16px rgba(0, 0, 0, 0.4), 0 28px 60px rgba(0, 0, 0, 0.5);
+
+  --ring: 0 0 0 3.5px rgba(139, 171, 142, 0.26);
+  --ring-dusk: 0 0 0 3.5px rgba(147, 170, 204, 0.28);
+
+  --tint-hero: #232a24;
+  --tint-glow: #1e1b15;
+  --tint-edge: rgba(9, 8, 5, 0.5);
+  --mark-top: #35302a;
+  --mark-bottom: #262a25;
+  --logo-a: #86a68a;
+  --logo-b: #4a6a4d;
+  --head-a: rgba(23, 21, 15, 0.94);
+  --head-b: rgba(23, 21, 15, 0.86);
+
+  /* Re-stepped for the dark card surface (#201D17), not lightened from the
+     light set: worst adjacent pair ΔE 9.0 protan, normal-vision floor 18.6,
+     every slot clearing 3:1 contrast. Hue order matches light, so a category
+     keeps its identity when the theme flips. */
+  --cat-1: #318357;
+  --cat-2: #bc8b34;
+  --cat-3: #4a7fbe;
+  --cat-4: #c67459;
+  --cat-5: #8e6bc4;
+  --cat-6: #2ca189;
+  --cat-other: #7c7468;
+
+  --inflow: #318357;
+  --outflow: #c67459;
+  --edge-ink-a: #7d8c7f;
+  --edge-ink-b: #7f8998;
+
+  /* Sheen on a dark ground is a faint warm light, not white film. */
+  --gloss: rgba(255, 244, 224, 0.055);
+  --gloss-strong: rgba(255, 244, 224, 0.075);
+  --gloss-mid: rgba(255, 244, 224, 0.045);
+  --inset-hi: rgba(255, 244, 224, 0.06);
+  --hover-wash: rgba(255, 244, 224, 0.06);
+  --hover-wash-strong: rgba(255, 244, 224, 0.1);
+  --grid-dot: rgba(255, 244, 224, 0.1);
+  --sketch-ink: rgba(255, 244, 224, 0.17);
+  --scroll-thumb: rgba(255, 244, 224, 0.14);
+  --scroll-thumb-hover: rgba(255, 244, 224, 0.26);
+  --amber-deep: #e0bd86;
+  /* Multiply would just muddy a dark ground; soft-light keeps the tooth. */
+  --grain-blend: soft-light;
+  --grain-opacity: 0.5;
+
+  --btn-a: #527456;
+  --btn-b: #47664b;
+  --btn-c: #3c5740;
+  --btn-ink: #f0f5ee;
+  --btn-glow: rgba(0, 0, 0, 0.35);
+
+  --e-modal: 0 0 0 1px rgba(255, 244, 224, 0.08),
+    0 24px 70px rgba(0, 0, 0, 0.62), 0 6px 16px rgba(0, 0, 0, 0.4);
+  --e-float: 0 0 0 1px var(--hairline), 0 2px 6px rgba(0, 0, 0, 0.32),
+    0 14px 34px rgba(0, 0, 0, 0.42);
+  --e-drag: 0 10px 22px rgba(0, 0, 0, 0.4), 0 26px 56px rgba(0, 0, 0, 0.5);
+  --e-rest: 0 1px 2px rgba(0, 0, 0, 0.3), 0 5px 16px rgba(0, 0, 0, 0.3);
+  --e-pick: 0 2px 6px rgba(0, 0, 0, 0.34), 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Pastel palette for mind-map bubbles — soft, chalky, never neon */
+:root {
+  --bubble-sand-bg: #f7ecd9;
+  --bubble-sand-edge: #e2cfae;
+  --bubble-sand-ink: #6d5734;
+
+  --bubble-sage-bg: #e6efe4;
+  --bubble-sage-edge: #c3d7c0;
+  --bubble-sage-ink: #46603f;
+
+  --bubble-sky-bg: #e4ecf5;
+  --bubble-sky-edge: #c2d3e6;
+  --bubble-sky-ink: #3f5670;
+
+  --bubble-blush-bg: #f7e6e0;
+  --bubble-blush-edge: #e6c7bb;
+  --bubble-blush-ink: #7a4f3e;
+
+  --bubble-lilac-bg: #ebe6f2;
+  --bubble-lilac-edge: #d0c6de;
+  --bubble-lilac-ink: #574a6b;
+
+  --bubble-mist-bg: #eeeae4;
+  --bubble-mist-edge: #d6d0c6;
+  --bubble-mist-ink: #575049;
+}
+
+/* Dark bubbles keep the same six identities but as deep tinted grounds with
+   lifted ink — chalky pastels would glow like stickers on a dark canvas. */
+:root[data-theme='dark'] {
+  --bubble-sand-bg: #302820;
+  --bubble-sand-edge: #4c4130;
+  --bubble-sand-ink: #e2cb9f;
+
+  --bubble-sage-bg: #232d25;
+  --bubble-sage-edge: #3b4b3c;
+  --bubble-sage-ink: #b8d4b5;
+
+  --bubble-sky-bg: #212a35;
+  --bubble-sky-edge: #364350;
+  --bubble-sky-ink: #b5cce4;
+
+  --bubble-blush-bg: #332822;
+  --bubble-blush-edge: #4e3c34;
+  --bubble-blush-ink: #e5bead;
+
+  --bubble-lilac-bg: #2b2633;
+  --bubble-lilac-edge: #433b50;
+  --bubble-lilac-ink: #cbbedf;
+
+  --bubble-mist-bg: #2a2720;
+  --bubble-mist-edge: #433e35;
+  --bubble-mist-ink: #d1c9bb;
+}

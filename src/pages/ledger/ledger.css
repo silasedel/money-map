@@ -1,0 +1,912 @@
+/* ─────────────────────────────────────────────────────
+   Ledger — filter bar, sums, day-stacked entries.
+   Also home to the shared KPI tiles, cash-flow chart and
+   composition ribbon that Overview and Spending reuse.
+   ───────────────────────────────────────────────────── */
+
+.lg__blank {
+  margin-top: 8px;
+  padding: 18px;
+}
+
+/* ── Filter bar ─────────────────────────────────────── */
+
+.lg__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.lg__search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1 1 260px;
+  min-width: 220px;
+  height: 38px;
+  padding: 0 12px 0 13px;
+  border-radius: var(--r-sm);
+  color: var(--ink-3);
+  background: var(--surface);
+  box-shadow: var(--e-1), 0 0 0 1px var(--hairline);
+  transition: box-shadow 0.2s var(--ease-out);
+}
+.lg__search:focus-within {
+  box-shadow: 0 0 0 1px var(--sage-edge), 0 0 0 4px var(--sage-wash);
+}
+.lg__search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.lg__searchX {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: var(--ink-3);
+  background: var(--surface-sunken);
+}
+.lg__searchX:hover {
+  color: var(--ink);
+  background: var(--hover-wash-strong);
+}
+
+.lg__kinds {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  background: var(--paper-deep);
+  box-shadow: inset 0 0 0 1px var(--hairline-soft);
+}
+.lg__kind {
+  position: relative;
+  min-width: 48px;
+  padding: 0 12px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 580;
+  color: var(--ink-3);
+  transition: color 0.18s var(--ease-out);
+}
+.lg__kind span:last-child {
+  position: relative;
+  z-index: 1;
+}
+.lg__kind.is-on {
+  color: var(--ink);
+}
+.lg__kind--income.is-on {
+  color: var(--sage-deep);
+}
+.lg__kind--expense.is-on {
+  color: var(--clay-deep);
+}
+.lg__kindThumb {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  background: var(--surface-raised);
+  box-shadow: var(--e-1), 0 0 0 1px var(--hairline);
+}
+
+.lg__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.lg__scope {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  overflow: hidden;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.lg__scopeText {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 2px 0;
+}
+.lg__scopeText strong {
+  color: var(--ink);
+  font-weight: 620;
+}
+.lg__scopeX {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  border-radius: 50%;
+  color: var(--ink-3);
+  background: var(--surface-sunken);
+}
+.lg__scopeX:hover {
+  color: var(--ink);
+}
+.lg__clear {
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 580;
+  color: var(--sage-deep);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+.lg__clear:hover {
+  background: var(--sage-wash);
+}
+
+/* ── Sums ───────────────────────────────────────────── */
+
+.lg__sums {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.lg__sum {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 15px 13px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--e-1), 0 0 0 1px var(--hairline);
+}
+.lg__sumLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.026em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lg__sumValue {
+  font-size: 20px;
+  font-weight: 620;
+  letter-spacing: -0.028em;
+  color: var(--ink);
+}
+.lg__sum--in .lg__sumValue {
+  color: var(--sage-deep);
+}
+.lg__sum--neg .lg__sumValue {
+  color: var(--clay-deep);
+}
+
+@media (max-width: 640px) {
+  .lg__sums {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── KPI tiles (shared) ─────────────────────────────── */
+
+.tiles {
+  display: grid;
+  grid-template-columns: 1.5fr repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  padding: 15px 17px 16px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--e-2), 0 0 0 1px var(--hairline);
+  transition: box-shadow 0.24s var(--ease-out);
+}
+
+.tile:hover {
+  box-shadow: var(--e-3), 0 0 0 1px var(--hairline-strong);
+}
+
+.tile--hero {
+  background:
+    linear-gradient(168deg, var(--gloss-strong) 0%, transparent 62%),
+    linear-gradient(160deg, var(--tint-hero) 0%, var(--surface) 55%);
+}
+
+.tile__figure {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tile__label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.026em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.tile__value {
+  font-size: 25px;
+  font-weight: 620;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1.05;
+}
+
+.tile--hero .tile__value {
+  font-size: 38px;
+  letter-spacing: -0.036em;
+}
+
+.tile__value.is-neg {
+  color: var(--clay-deep);
+}
+
+.tile__note {
+  font-size: 11.5px;
+  color: var(--ink-4);
+  letter-spacing: -0.004em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spark {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.spark svg {
+  flex: none;
+}
+
+.spark__cap {
+  font-size: 11.5px;
+  font-weight: 580;
+  color: var(--ink-3);
+  padding-bottom: 2px;
+}
+
+@media (max-width: 1180px) {
+  .tiles {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .tile--hero {
+    grid-column: span 3;
+  }
+}
+
+@media (max-width: 760px) {
+  .tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tile--hero {
+    grid-column: span 2;
+  }
+}
+
+/* ── Cash flow (shared) ─────────────────────────────── */
+
+.inc__flow {
+  margin-top: 12px;
+  padding-bottom: 8px;
+}
+
+.inc__legend {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.inc__legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 560;
+  color: var(--ink-3);
+}
+
+.inc__legendDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.flow {
+  position: relative;
+  padding: 6px 20px 4px;
+}
+
+.flow__svg {
+  display: block;
+  overflow: visible;
+}
+
+.flow__month {
+  font-family: var(--font-num);
+  font-size: 10.5px;
+  font-weight: 560;
+  letter-spacing: 0.01em;
+  transition: fill 0.18s var(--ease-out);
+}
+
+.flow__tip {
+  position: absolute;
+  top: 4px;
+  z-index: 5;
+  translate: -50% 0;
+  min-width: 148px;
+  padding: 9px 11px 10px;
+  border-radius: var(--r-md);
+  background: var(--veil-strong);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  box-shadow: var(--e-float);
+  pointer-events: none;
+}
+
+.flow__tipHead {
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 640;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.flow__tipRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 19px;
+}
+
+.flow__tipRow--net {
+  margin-top: 4px;
+  padding-top: 5px;
+  border-top: 1px solid var(--hairline);
+}
+
+.flow__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.flow__tipKey {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.flow__tipVal {
+  margin-left: auto;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ── Composition (shared) ───────────────────────────── */
+
+.inc__split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .inc__split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.comp {
+  padding-bottom: 8px;
+}
+
+.comp__empty {
+  padding: 26px 20px 30px;
+  font-size: 13px;
+  color: var(--ink-4);
+  text-align: center;
+}
+
+.comp__ribbon {
+  display: flex;
+  gap: 2px; /* the surface shows through — segments never touch */
+  height: 11px;
+  margin: 15px 20px 16px;
+}
+
+.comp__seg {
+  min-width: 4px;
+  border-radius: var(--r-pill);
+  cursor: default;
+  transition: transform 0.22s var(--ease-spring);
+}
+
+.comp__seg:hover {
+  transform: scaleY(1.35);
+}
+
+.comp__list {
+  padding: 0 10px 8px;
+}
+
+.comp__row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: var(--r-xs);
+  transition: background-color 0.16s var(--ease-out), opacity 0.16s var(--ease-out);
+}
+
+.comp__row.is-on {
+  background: var(--surface-sunken);
+}
+
+.comp__row.is-off {
+  opacity: 0.44;
+}
+
+.comp__dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.comp__label {
+  font-size: 13px;
+  font-weight: 540;
+  letter-spacing: -0.008em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.comp__count {
+  flex: none;
+  font-size: 11px;
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+.comp__amt {
+  margin-left: auto;
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 580;
+  color: var(--ink);
+}
+
+.comp__share {
+  flex: none;
+  width: 34px;
+  text-align: right;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+/* ── Entries, stacked by day ────────────────────────── */
+
+.txl__month {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 6px 8px 0;
+  padding: 9px 12px;
+  border-radius: var(--r-sm);
+  background: var(--veil-strong);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 0 0 1px var(--hairline-soft);
+}
+.txl__monthName {
+  font-size: 13px;
+  font-weight: 660;
+  letter-spacing: -0.014em;
+  color: var(--ink);
+}
+.txl__monthSums {
+  display: inline-flex;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 580;
+  color: var(--ink-3);
+}
+.txl__monthSums .is-in { color: var(--sage-deep); }
+.txl__monthSums .is-net { color: var(--ink); }
+.txl__monthSums .is-net.is-neg { color: var(--clay-deep); }
+
+.txl {
+  padding: 4px 0 10px;
+}
+
+.txl__empty {
+  padding: 34px 20px 38px;
+  font-size: 13px;
+  color: var(--ink-4);
+  text-align: center;
+}
+
+.txl__day + .txl__day {
+  border-top: 1px solid var(--hairline-soft);
+}
+
+.txl__dayHead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 14px 20px 4px;
+}
+
+.txl__dayName {
+  font-size: 12.5px;
+  font-weight: 640;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+
+.txl__dayDate {
+  font-size: 11.5px;
+  color: var(--ink-4);
+}
+
+.txl__dayNet {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 10px;
+  font-size: 11.5px;
+  font-weight: 580;
+  color: var(--ink-3);
+}
+.txl__dayNet .is-in {
+  color: var(--sage-deep);
+}
+.txl__dayNet .is-out {
+  color: var(--ink-3);
+}
+
+.txl__list {
+  padding: 2px 10px 6px;
+}
+
+.txl__row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 46px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  transition: background-color 0.16s var(--ease-out);
+}
+
+.txl__row:hover {
+  background: var(--surface-sunken);
+}
+
+.txl__mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 9px;
+}
+
+.txl__mark--income {
+  color: var(--sage-deep);
+  background: var(--sage-wash);
+}
+
+.txl__mark--expense {
+  color: var(--clay-deep);
+  background: var(--clay-wash);
+}
+
+.txl__open {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex: 1;
+  min-width: 0;
+  min-height: 46px;
+  text-align: left;
+}
+
+.txl__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.txl__title {
+  font-size: 13.5px;
+  font-weight: 540;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.txl__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 11.5px;
+  color: var(--ink-4);
+}
+
+.txl__group {
+  flex: none;
+  color: var(--ink-3);
+  font-weight: 560;
+}
+.txl__group.is-link {
+  cursor: pointer;
+  padding: 0 4px;
+  margin-left: -4px;
+  border-radius: 4px;
+}
+.txl__group.is-link:hover {
+  color: var(--sage-deep);
+  background: var(--sage-wash);
+}
+
+.txl__note {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.txl__group + .txl__note::before {
+  content: '·';
+  margin-right: 6px;
+}
+
+.txl__tags {
+  flex: none;
+  display: flex;
+  gap: 4px;
+  max-width: 40%;
+  overflow: hidden;
+}
+
+.txl__amt {
+  flex: none;
+  width: 96px;
+  text-align: right;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.txl__amt--income {
+  color: var(--sage-deep);
+}
+.txl__amt--expense {
+  color: var(--ink-2);
+}
+
+.txl__tools {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  margin-left: 4px;
+  opacity: 0;
+  transition: opacity 0.16s var(--ease-out);
+}
+
+.txl__row:hover .txl__tools,
+.txl__row:focus-within .txl__tools,
+.txl__tools:has(.is-on) {
+  opacity: 1;
+}
+
+.txl__tool {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  color: var(--ink-3);
+  transition: color 0.16s, background-color 0.16s;
+}
+
+.txl__tool:hover {
+  color: var(--ink);
+  background: var(--hover-wash-strong);
+}
+
+.txl__tool.is-on {
+  color: var(--amber-deep);
+  background: var(--amber-wash);
+}
+
+.txl__tool--del:hover {
+  color: var(--clay-deep);
+  background: var(--clay-wash);
+}
+
+.txl__more {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 8px 20px 4px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  font-size: 12.5px;
+  font-weight: 560;
+  color: var(--ink-2);
+  background: var(--surface-sunken);
+  transition: background-color 0.16s, color 0.16s;
+}
+
+.txl__more:hover {
+  color: var(--ink);
+  background: var(--hover-wash-strong);
+}
+
+/* ── Entry form ─────────────────────────────────────── */
+
+.txf {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.txf__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.txf__hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: -6px;
+  overflow: hidden;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.txf__hint svg {
+  color: var(--sage);
+  flex: none;
+}
+
+.txf__hint strong {
+  font-weight: 620;
+  color: var(--ink);
+}
+
+.txf__fix {
+  margin-left: auto;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 580;
+  color: var(--ink-3);
+  background: var(--surface-sunken);
+  transition: color 0.16s, background-color 0.16s;
+}
+
+.txf__fix:hover {
+  color: var(--ink);
+  background: var(--hover-wash-strong);
+}
+
+.txf__repeat {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.txf__rep {
+  height: 28px;
+  padding: 0 11px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px;
+  font-weight: 560;
+  color: var(--ink-3);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  transition: color 0.16s, background-color 0.16s, box-shadow 0.16s;
+}
+.txf__rep:hover {
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+}
+.txf__rep.is-on {
+  color: var(--dusk-deep);
+  background: var(--dusk-wash);
+  box-shadow: inset 0 0 0 1px transparent;
+}
+
+/* ── Entry form extras (tags, repeat, note) ─────────── */
+
+.txf__extras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding-top: 2px;
+}
+.txf__extras .tagpick {
+  display: contents;
+}
+.txf__repeat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 4px 0 9px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px;
+  font-weight: 560;
+  color: var(--ink-3);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  cursor: pointer;
+}
+.txf__repeat:has(select:not([value='none'])),
+.txf__repeat:focus-within {
+  color: var(--dusk-deep);
+}
+.txf__repeatSel {
+  height: 100%;
+  padding-right: 18px;
+  font-size: 12.5px;
+  font-weight: 560;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23948b7d' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+}
+.txf__noteBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px 0 8px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px;
+  font-weight: 560;
+  color: var(--ink-3);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+.txf__noteBtn:hover {
+  color: var(--ink);
+  background: var(--hover-wash);
+}

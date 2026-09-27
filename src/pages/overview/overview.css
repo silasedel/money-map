@@ -1,0 +1,385 @@
+/* ─────────────────────────────────────────────────────
+   Overview — safe to spend, month, budgets, coming up
+   ───────────────────────────────────────────────────── */
+
+.ov__blank {
+  margin-top: 8px;
+  padding: 18px;
+}
+.ov__blankActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.ov__top {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+  align-items: stretch;
+}
+
+.ov__mid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+  align-items: start;
+}
+.ov__mid .inc__flow {
+  margin-top: 0;
+}
+
+.ov__bottom {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+  align-items: start;
+}
+
+.ov__side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 1100px) {
+  .ov__top {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ov__safe {
+    grid-column: span 2;
+  }
+}
+@media (max-width: 860px) {
+  .ov__top,
+  .ov__mid,
+  .ov__bottom {
+    grid-template-columns: 1fr;
+  }
+  .ov__safe {
+    grid-column: auto;
+  }
+}
+
+/* ── Safe to spend ──────────────────────────────────── */
+
+.ov__safe {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px 18px;
+  background:
+    linear-gradient(168deg, var(--gloss-strong) 0%, transparent 58%),
+    linear-gradient(158deg, var(--tint-hero) 0%, var(--surface) 56%);
+}
+.ov__safe.is-neg {
+  background:
+    linear-gradient(168deg, var(--gloss-strong) 0%, transparent 58%),
+    linear-gradient(158deg, var(--clay-wash) 0%, var(--surface) 60%);
+}
+
+.ov__label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.026em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.ov__big {
+  margin-top: 8px;
+  font-size: 44px;
+  font-weight: 640;
+  letter-spacing: -0.038em;
+  line-height: 1;
+  color: var(--ink);
+}
+.ov__safe.is-neg .ov__big {
+  color: var(--clay-deep);
+}
+
+.ov__safeNote {
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  max-width: 340px;
+}
+
+.ov__paceBar {
+  height: 5px;
+  margin-top: auto;
+  padding-top: 0;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  overflow: hidden;
+  position: relative;
+  top: 14px;
+}
+.ov__paceFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--ink-4);
+  opacity: 0.55;
+}
+.ov__paceNote {
+  margin-top: 20px;
+  font-size: 11.5px;
+  color: var(--ink-4);
+}
+
+/* ── This month ─────────────────────────────────────── */
+
+.ov__rows {
+  padding: 10px 20px 0;
+}
+.ov__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+}
+.ov__row--net {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--hairline);
+}
+.ov__rowDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.ov__rowDot.is-blank {
+  background: transparent;
+}
+.ov__rowKey {
+  font-size: 13px;
+  font-weight: 540;
+  color: var(--ink);
+}
+.ov__row .chip {
+  margin-left: 2px;
+}
+.ov__rowVal {
+  margin-left: auto;
+  font-size: 15px;
+  font-weight: 620;
+  color: var(--ink);
+}
+.ov__row--net .ov__rowVal {
+  color: var(--sage-deep);
+}
+.ov__rowVal.is-neg {
+  color: var(--clay-deep);
+}
+
+.ov__monthFoot {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 20px 0;
+  padding: 12px 0 16px;
+  border-top: 1px solid var(--hairline-soft);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.ov__monthFoot .num {
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.ov__monthFoot .num.is-neg {
+  color: var(--clay-deep);
+}
+
+/* ── Budgets ────────────────────────────────────────── */
+
+.ov__budgets {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 16px;
+}
+.ov__budgetsEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px 4px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+.ov__rings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 4px;
+  padding: 14px 14px 0;
+}
+.ov__ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 72px;
+  padding: 4px 2px 6px;
+  border-radius: var(--r-sm);
+  transition: background-color 0.16s;
+}
+.ov__ring:hover {
+  background: var(--surface-sunken);
+}
+.ov__ringPct {
+  font-size: 12px;
+  font-weight: 640;
+  color: var(--ink);
+}
+.ov__ringLabel {
+  max-width: 100%;
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ov__budgetsNote {
+  margin: auto 20px 0;
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+/* ── Coming up ──────────────────────────────────────── */
+
+.ov__soon {
+  padding-bottom: 10px;
+}
+.ov__soonEmpty {
+  padding: 22px 20px 20px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-4);
+}
+.ov__soonList {
+  padding: 10px 10px 0;
+}
+.ov__soonRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: var(--r-xs);
+  transition: background-color 0.16s;
+}
+.ov__soonRow:hover {
+  background: var(--surface-sunken);
+}
+.ov__soonDay {
+  flex: none;
+  min-width: 40px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  padding: 0 6px;
+  border-radius: 7px;
+  font-family: var(--font-num);
+  font-size: 11px;
+  font-weight: 640;
+  color: var(--ink-3);
+  background: var(--surface-sunken);
+}
+.ov__soonDay.is-now {
+  color: var(--amber-deep);
+  background: var(--amber-wash);
+}
+.ov__soonTitle {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 540;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ov__soonWhen {
+  flex: none;
+  font-size: 11.5px;
+  color: var(--ink-4);
+}
+.ov__soonAmt {
+  flex: none;
+  min-width: 70px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.ov__soonAmt.is-in {
+  color: var(--sage-deep);
+}
+
+/* ── Tax + goals side ───────────────────────────────── */
+
+.ov__taxFig {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 20px 18px;
+}
+.ov__taxBig {
+  font-size: 28px;
+  font-weight: 620;
+  letter-spacing: -0.03em;
+  color: var(--amber-deep);
+}
+.ov__taxNote {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.ov__goalList {
+  padding: 10px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ov__goal {
+  --accent: var(--sage);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 10px;
+  align-items: baseline;
+}
+.ov__goal--dusk { --accent: var(--dusk); }
+.ov__goal--clay { --accent: var(--clay); }
+.ov__goal--amber { --accent: var(--amber); }
+.ov__goalTitle {
+  font-size: 12.5px;
+  font-weight: 540;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ov__goalPct {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+.ov__goalTrack {
+  grid-column: span 2;
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.ov__goalFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+}
