@@ -5,6 +5,7 @@ export type PageId =
   | 'ledger'
   | 'spending'
   | 'subscriptions'
+  | 'categories'
   | 'taxes'
   | 'summary'
   | 'goals'
@@ -80,8 +81,25 @@ export interface Transaction {
    */
   group?: string
   tags?: TagId[]
+  /** A category you made — "Silas AI", "Consulting" — or none. */
+  categoryId?: string
   /** Set when this entry was logged against a tracked subscription. */
   subscriptionId?: string
+}
+
+/* ── Categories ───────────────────────────────────────── */
+
+export type CategoryColor = 'cat-1' | 'cat-2' | 'cat-3' | 'cat-4' | 'cat-5' | 'cat-6'
+
+/**
+ * Categories are yours, not derived: a project, a channel, a side of your
+ * life. Anything in or out can carry one, and each gets its own report.
+ */
+export interface Category {
+  id: string
+  name: string
+  color: CategoryColor
+  createdAt: number
 }
 
 /* ── Budgets ──────────────────────────────────────────── */
@@ -122,6 +140,7 @@ export interface Subscription {
   status: SubscriptionStatus
   note?: string
   tags?: TagId[]
+  categoryId?: string
   /** Grouping override carried onto every payment logged from it. */
   group?: string
   createdAt: number
@@ -180,6 +199,7 @@ export interface AppState {
   edges: MindEdge[]
   viewport: Viewport
   transactions: Transaction[]
+  categories: Category[]
   budgets: Budget[]
   subscriptions: Subscription[]
   goals: Goal[]

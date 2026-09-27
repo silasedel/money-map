@@ -971,3 +971,109 @@ select.inp {
     width: 100%;
   }
 }
+
+/* ── Categories ─────────────────────────────────────── */
+
+.cat {
+  --cat-color: var(--ink-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 20px;
+  padding: 0 8px 0 7px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.004em;
+  color: var(--ink-2);
+  background: var(--surface-sunken);
+  white-space: nowrap;
+  transition: background-color 0.16s, color 0.16s, box-shadow 0.16s;
+}
+.cat--md {
+  height: 28px;
+  padding: 0 11px 0 9px;
+  font-size: 12.5px;
+}
+.cat__dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cat-color);
+}
+.cat__count {
+  font-size: 10.5px;
+  color: var(--ink-4);
+}
+.cat.is-clickable {
+  cursor: pointer;
+  color: var(--ink-3);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+.cat.is-clickable:hover {
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+}
+.cat.is-clickable.is-active {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--cat-color) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cat-color) 45%, transparent);
+}
+
+.catpick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.catpick__add {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px 0 8px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px;
+  font-weight: 580;
+  color: var(--sage-deep);
+  background: var(--sage-wash);
+}
+.catpick__add:hover {
+  background: var(--sage-edge);
+}
+.catpick__input {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px;
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--sage-edge), 0 0 0 3px var(--sage-wash);
+}
+
+/* quick-add category select */
+.qa__cat {
+  flex: none;
+  height: 40px;
+  max-width: 170px;
+  padding: 0 30px 0 12px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 540;
+  color: var(--ink-2);
+  background: var(--paper-deep);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23948b7d' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.qa__cat.has-value {
+  color: var(--ink);
+}

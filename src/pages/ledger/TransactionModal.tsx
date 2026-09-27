@@ -3,12 +3,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Field, Input, Segmented } from '@/components/ui/Field'
-import { TagPicker } from '@/components/Tags'
+import { CategoryPicker } from '@/components/Categories'
 import { actions, useStore, shallowArray } from '@/lib/store'
 import { ui, useUI } from '@/lib/ui'
 import { currencySymbol, todayISO } from '@/lib/format'
 import { detectGroup } from '@/lib/grouping'
-import { tagsInUse, isBuiltinTag } from '@/lib/tags'
 import { CADENCES, advanceDate } from '@/lib/subscriptions'
 import { easeQuick } from '@/lib/motion'
 import { Icon } from '@/components/Icon'
@@ -31,7 +30,7 @@ export function TransactionModal() {
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
   const [date, setDate] = useState(todayISO)
-  const [tags, setTags] = useState<string[]>([])
+  const [categoryId, setCategoryId] = useState<string | undefined>(undefined)
   const [repeat, setRepeat] = useState<Repeat>('none')
   const [note, setNote] = useState('')
   const [showNote, setShowNote] = useState(false)
@@ -51,7 +50,7 @@ export function TransactionModal() {
       editing ? String(editing.amount) : preset?.amount !== undefined ? String(preset.amount) : '',
     )
     setDate(editing?.date ?? preset?.date ?? todayISO())
-    setTags(editing?.tags ?? preset?.tags ?? [])
+    setCategoryId(editing?.categoryId ?? preset?.categoryId)
     setRepeat('none')
     setNote(editing?.note ?? '')
     setShowNote(Boolean(editing?.note))
@@ -86,11 +85,6 @@ export function TransactionModal() {
     return detectGroup(probe, transactions)
   }, [title, kind, value, date, transactions, editing])
 
-  const customTags = useMemo(
-    () => tagsInUse(transactions).filter((t) => !isBuiltinTag(t)),
-    [transactions],
-  )
-
   /** The subscription this entry belongs to, if it was logged from one. */
   const linkedId = editing?.subscriptionId ?? preset?.subscriptionId
   const linked = linkedId ? subscriptions.find((s) => s.id === linkedId) : undefined
@@ -106,7 +100,9 @@ export function TransactionModal() {
       note: note.trim() || undefined,
       date,
       group: override || undefined,
-      tags: tags.length ? tags : undefined,
+      // Tags are only ever set from the ledger row (write-off) — keep them.
+      tags: editing?.tags ?? preset?.tags,
+      categoryId,
       subscriptionId: editing?.subscriptionId ?? preset?.subscriptionId,
     }
 
@@ -125,7 +121,7 @@ export function TransactionModal() {
         nextDate: advanceDate(date, repeat),
         status: 'active',
         group: override || undefined,
-        tags: tags.length ? tags : undefined,
+        categoryId,
       })
       actions.addTransaction({ ...payload, subscriptionId: subId })
     } else {
@@ -289,8 +285,11 @@ export function TransactionModal() {
           </Field>
         </div>
 
+        <Field label="Category" hint="Optional — a project, a channel, a side of life">
+          <CategoryPicker value={categoryId} onChange={setCategoryId} />
+        </Field>
+
         <div className="txf__extras">
-          <TagPicker value={tags} onChange={setTags} suggestions={customTags} />
 
           {!editing && !linked && (
             <label className="txf__repeat">

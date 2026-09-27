@@ -4,6 +4,7 @@ import { PageShell } from '@/components/PageShell'
 import { Button } from '@/components/ui/Button'
 import { MonthPicker } from '@/components/MonthPicker'
 import { TagChip } from '@/components/Tags'
+import { CategoryChip } from '@/components/Categories'
 import { QuickAdd } from '@/components/QuickAdd'
 import { Icon } from '@/components/Icon'
 import { shallowArray, useStore } from '@/lib/store'
@@ -20,12 +21,14 @@ type KindFilter = TxKind | 'all'
 
 export function LedgerPage() {
   const transactions = useStore((s) => s.transactions, shallowArray)
+  const categories = useStore((s) => s.categories, shallowArray)
 
   const [month, setMonth] = useState<string>('all')
   const [q, setQ] = useState('')
   const [kind, setKind] = useState<KindFilter>('all')
   const [tag, setTag] = useState<string | null>(null)
   const [group, setGroup] = useState<string | null>(null)
+  const [categoryId, setCategoryId] = useState<string | null>(null)
 
   /* Another page may have sent us here with a filter in hand. */
   useEffect(() => {
@@ -36,6 +39,7 @@ export function LedgerPage() {
     if (f.kind) setKind(f.kind)
     if (f.tag !== undefined) setTag(f.tag ?? null)
     if (f.group !== undefined) setGroup(f.group ?? null)
+    if (f.categoryId !== undefined) setCategoryId(f.categoryId ?? null)
   }, [])
 
   /* Group labels come from the whole ledger, so filtering a month doesn't
@@ -59,6 +63,7 @@ export function LedgerPage() {
       if (month !== 'all' && !t.date.startsWith(month)) return false
       if (kind !== 'all' && t.kind !== kind) return false
       if (tag && !t.tags?.includes(tag)) return false
+      if (categoryId && t.categoryId !== categoryId) return false
       if (gk && (groupOf.get(t.id) ?? '').toLowerCase() !== gk) return false
       if (needle) {
         const hay = `${t.title} ${t.note ?? ''} ${groupOf.get(t.id) ?? ''}`.toLowerCase()
@@ -66,7 +71,7 @@ export function LedgerPage() {
       }
       return true
     })
-  }, [transactions, month, kind, tag, group, q, groupOf])
+  }, [transactions, month, kind, tag, group, categoryId, q, groupOf])
 
   const sums = useMemo(() => {
     let income = 0
@@ -78,12 +83,13 @@ export function LedgerPage() {
     return { income, expense, net: income - expense }
   }, [filtered])
 
-  const anyFilter = q.trim() || kind !== 'all' || tag || group
+  const anyFilter = q.trim() || kind !== 'all' || tag || group || categoryId
   const clear = () => {
     setQ('')
     setKind('all')
     setTag(null)
     setGroup(null)
+    setCategoryId(null)
   }
 
   const scopeLabel = month === 'all' ? 'All time' : monthLabel(month, true)
@@ -171,6 +177,19 @@ export function LedgerPage() {
               ))}
             </div>
 
+            {categories.length > 0 && (
+              <div className="lg__tags">
+                {categories.map((c) => (
+                  <CategoryChip
+                    key={c.id}
+                    category={c}
+                    active={categoryId === c.id}
+                    onClick={() => setCategoryId(categoryId === c.id ? null : c.id)}
+                  />
+                ))}
+              </div>
+            )}
+
             {tags.length > 0 && (
               <div className="lg__tags">
                 {tags.map((id) => (
@@ -228,6 +247,7 @@ export function LedgerPage() {
             transactions={filtered}
             groupOf={groupOf}
             onGroupClick={(label) => setGroup(label)}
+            onCategoryClick={(id) => setCategoryId(id)}
             emptyText={
               anyFilter
                 ? 'Nothing matches those filters.'

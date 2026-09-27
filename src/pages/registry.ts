@@ -4,6 +4,7 @@ import type { IconName } from '@/components/Icon'
 import { OverviewPage } from './overview/OverviewPage'
 import { LedgerPage } from './ledger/LedgerPage'
 import { SummaryPage } from './summary/SummaryPage'
+import { CategoriesPage } from './categories/CategoriesPage'
 import { SpendingPage } from './spending/SpendingPage'
 import { SubscriptionsPage } from './subscriptions/SubscriptionsPage'
 import { TaxesPage } from './taxes/TaxesPage'
@@ -29,6 +30,7 @@ export interface PageDef {
 export const PAGES: PageDef[] = [
   { id: 'overview', label: 'Overview', icon: 'home', Component: OverviewPage, section: 'money' },
   { id: 'ledger', label: 'Ledger', icon: 'ledger', Component: LedgerPage, section: 'money' },
+  { id: 'categories', label: 'Categories', icon: 'tag', Component: CategoriesPage, section: 'money' },
   { id: 'summary', label: 'Summary', icon: 'outlook', Component: SummaryPage, section: 'money' },
   { id: 'spending', label: 'Budgets', icon: 'spending', Component: SpendingPage, section: 'money' },
   { id: 'subscriptions', label: 'Subscriptions', icon: 'subscriptions', Component: SubscriptionsPage, section: 'money' },

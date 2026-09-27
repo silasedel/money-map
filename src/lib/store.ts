@@ -2,6 +2,7 @@ import { useRef, useSyncExternalStore } from 'react'
 import type {
   AppState,
   Budget,
+  Category,
   Goal,
   MindNode,
   PageId,
@@ -18,7 +19,7 @@ import { advanceDate } from './subscriptions'
    theme script in index.html reads it before React loads. Versioning lives
    inside the payload and `migrate` walks old shapes forward. */
 const KEY = 'money-map-os/v1'
-const VERSION = 3
+const VERSION = 4
 
 export const DEFAULT_SETTINGS: Settings = {
   theme: 'system',
@@ -35,13 +36,14 @@ const initial: AppState = {
   edges: [],
   viewport: { x: 0, y: 0, zoom: 1 },
   transactions: [],
+  categories: [],
   budgets: [],
   subscriptions: [],
   goals: [],
 }
 
 const VALID_PAGES = new Set<PageId>([
-  'overview', 'ledger', 'spending', 'subscriptions', 'taxes', 'summary', 'goals', 'mindmap',
+  'overview', 'ledger', 'categories', 'spending', 'subscriptions', 'taxes', 'summary', 'goals', 'mindmap',
 ])
 
 /**
@@ -66,6 +68,12 @@ function migrate(raw: Partial<AppState> & { page?: string }): AppState {
     v = 3
   }
 
+  if (v < 4) {
+    // v3 → v4: user-made categories.
+    if (!Array.isArray(p.categories)) p.categories = []
+    v = 4
+  }
+
   const page = VALID_PAGES.has(p.page as PageId) ? (p.page as PageId) : initial.page
 
   // Merge over defaults so a partial payload can't leave holes — settings
@@ -79,6 +87,7 @@ function migrate(raw: Partial<AppState> & { page?: string }): AppState {
     nodes: Array.isArray(p.nodes) ? (p.nodes as AppState['nodes']) : [],
     edges: Array.isArray(p.edges) ? (p.edges as AppState['edges']) : [],
     transactions: Array.isArray(p.transactions) ? (p.transactions as Transaction[]) : [],
+    categories: Array.isArray(p.categories) ? (p.categories as Category[]) : [],
     budgets: Array.isArray(p.budgets) ? (p.budgets as Budget[]) : [],
     subscriptions: Array.isArray(p.subscriptions) ? (p.subscriptions as Subscription[]) : [],
     goals: Array.isArray(p.goals) ? (p.goals as Goal[]) : [],
@@ -295,6 +304,35 @@ export const actions = {
       transactions: s.transactions.filter((t) => t.id !== id),
     })),
 
+  /* ── Categories ── */
+  addCategory: (c: Omit<Category, 'id' | 'createdAt'>) => {
+    const id = uid('c')
+    set((s) => ({
+      ...s,
+      categories: [...s.categories, { ...c, id, createdAt: Date.now() }],
+    }))
+    return id
+  },
+
+  updateCategory: (id: string, patch: Partial<Category>) =>
+    set((s) => ({
+      ...s,
+      categories: s.categories.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+    })),
+
+  /** Entries keep everything else; they just stop pointing at the category. */
+  removeCategory: (id: string) =>
+    set((s) => ({
+      ...s,
+      categories: s.categories.filter((c) => c.id !== id),
+      transactions: s.transactions.map((t) =>
+        t.categoryId === id ? { ...t, categoryId: undefined } : t,
+      ),
+      subscriptions: s.subscriptions.map((x) =>
+        x.categoryId === id ? { ...x, categoryId: undefined } : x,
+      ),
+    })),
+
   /* ── Budgets ── */
   addBudget: (b: Omit<Budget, 'id' | 'createdAt'>) =>
     set((s) => ({
@@ -354,6 +392,7 @@ export const actions = {
         createdAt: Date.now(),
         group: sub.group,
         tags: sub.tags?.length ? [...sub.tags] : undefined,
+        categoryId: sub.categoryId,
         subscriptionId: sub.id,
       }
       // Advance until the anchor is strictly after the payment we just logged.

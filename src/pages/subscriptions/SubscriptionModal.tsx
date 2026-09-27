@@ -1,12 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Field, Input, Segmented } from '@/components/ui/Field'
-import { TagPicker } from '@/components/Tags'
-import { actions, shallowArray, useStore } from '@/lib/store'
+import { CategoryPicker } from '@/components/Categories'
+import { actions } from '@/lib/store'
 import { currencySymbol, todayISO } from '@/lib/format'
 import { CADENCES, perMonth } from '@/lib/subscriptions'
-import { isBuiltinTag, tagsInUse } from '@/lib/tags'
 import { money } from '@/lib/format'
 import type { Cadence, Subscription, TxKind } from '@/lib/types'
 
@@ -26,14 +25,12 @@ interface Props {
 }
 
 export function SubscriptionModal({ open, onClose, editing, preset }: Props) {
-  const transactions = useStore((s) => s.transactions, shallowArray)
-
   const [kind, setKind] = useState<TxKind>('expense')
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
   const [cadence, setCadence] = useState<Cadence>('monthly')
   const [nextDate, setNextDate] = useState(todayISO)
-  const [tags, setTags] = useState<string[]>([])
+  const [categoryId, setCategoryId] = useState<string | undefined>(undefined)
   const [note, setNote] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const titleRef = useRef<HTMLInputElement>(null)
@@ -45,14 +42,12 @@ export function SubscriptionModal({ open, onClose, editing, preset }: Props) {
     setAmount(editing ? String(editing.amount) : preset?.amount ? String(preset.amount) : '')
     setCadence(editing?.cadence ?? preset?.cadence ?? 'monthly')
     setNextDate(editing?.nextDate ?? preset?.nextDate ?? todayISO())
-    setTags(editing?.tags ?? [])
+    setCategoryId(editing?.categoryId)
     setNote(editing?.note ?? '')
     setConfirmDelete(false)
     const t = setTimeout(() => titleRef.current?.focus(), 90)
     return () => clearTimeout(t)
   }, [open, editing, preset])
-
-  const customTags = useMemo(() => tagsInUse(transactions).filter((t) => !isBuiltinTag(t)), [transactions])
 
   const value = Number.parseFloat(amount)
   const valid = title.trim().length > 0 && Number.isFinite(value) && value > 0 && /^\d{4}-\d{2}-\d{2}$/.test(nextDate)
@@ -65,7 +60,8 @@ export function SubscriptionModal({ open, onClose, editing, preset }: Props) {
       kind,
       cadence,
       nextDate,
-      tags: tags.length ? tags : undefined,
+      tags: editing?.tags,
+      categoryId,
       note: note.trim() || undefined,
     }
     if (editing) actions.updateSubscription(editing.id, payload)
@@ -181,8 +177,8 @@ export function SubscriptionModal({ open, onClose, editing, preset }: Props) {
           <Input type="date" value={nextDate} onChange={(e) => setNextDate(e.target.value || todayISO())} />
         </Field>
 
-        <Field label="Tags" hint="Carried onto every payment">
-          <TagPicker value={tags} onChange={setTags} kind={kind} suggestions={customTags} />
+        <Field label="Category" hint="Carried onto every payment">
+          <CategoryPicker value={categoryId} onChange={setCategoryId} />
         </Field>
 
         <Field label="Note" hint="Optional">

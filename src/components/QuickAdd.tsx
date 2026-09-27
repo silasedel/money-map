@@ -16,7 +16,9 @@ import { Icon } from './Icon'
  */
 export function QuickAdd() {
   const transactions = useStore((s) => s.transactions, shallowArray)
+  const categories = useStore((s) => s.categories, shallowArray)
   const [kind, setKind] = useState<TxKind>('expense')
+  const [categoryId, setCategoryId] = useState('')
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
   const [flash, setFlash] = useState<string | null>(null)
@@ -41,7 +43,13 @@ export function QuickAdd() {
 
   const submit = () => {
     if (!valid) return
-    actions.addTransaction({ kind, title: title.trim(), amount: value, date: todayISO() })
+    actions.addTransaction({
+      kind,
+      title: title.trim(),
+      amount: value,
+      date: todayISO(),
+      categoryId: categoryId || undefined,
+    })
     setFlash(`${kind === 'income' ? '+' : '−'}${currencySymbol()}${value.toFixed(2)} · ${title.trim()}`)
     window.setTimeout(() => setFlash(null), 2200)
     setTitle('')
@@ -55,6 +63,7 @@ export function QuickAdd() {
         kind,
         title: title.trim() || undefined,
         amount: Number.isFinite(value) && value > 0 ? value : undefined,
+        categoryId: categoryId || undefined,
       },
     })
 
@@ -124,6 +133,22 @@ export function QuickAdd() {
           autoComplete="off"
         />
       </label>
+
+      {categories.length > 0 && (
+        <select
+          className={`qa__cat ${categoryId ? 'has-value' : ''}`}
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
+          aria-label="Category"
+        >
+          <option value="">No category</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+      )}
 
       <button type="submit" className="qa__go" disabled={!valid}>
         <Icon name="check" size={15} strokeWidth={2.4} />

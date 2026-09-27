@@ -14,6 +14,7 @@ export interface ComposerPreset {
   amount?: number
   tags?: string[]
   group?: string
+  categoryId?: string
   subscriptionId?: string
   date?: string
 }
@@ -23,6 +24,7 @@ export interface LedgerFilter {
   kind?: TxKind | 'all'
   tag?: string
   group?: string
+  categoryId?: string
   /** `YYYY-MM`, or 'all'. */
   month?: string
 }

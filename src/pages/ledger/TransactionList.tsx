@@ -8,12 +8,15 @@ import { spring, stagger } from '@/lib/motion'
 import { hasTag } from '@/lib/tags'
 import { Icon } from '@/components/Icon'
 import { TagChip } from '@/components/Tags'
+import { CategoryChip } from '@/components/Categories'
+import { shallowArray, useStore } from '@/lib/store'
 
 interface Props {
   transactions: Transaction[]
   /** Derived group label per entry id, so each row can say where it was filed. */
   groupOf: Map<string, string>
   onGroupClick?: (label: string) => void
+  onCategoryClick?: (id: string) => void
   emptyText?: string
 }
 
@@ -31,8 +34,10 @@ interface Day {
  * carrying its own net, so a scroll through the month reads like a statement
  * rather than a feed.
  */
-export function TransactionList({ transactions, groupOf, onGroupClick, emptyText }: Props) {
+export function TransactionList({ transactions, groupOf, onGroupClick, onCategoryClick, emptyText }: Props) {
   const [limit, setLimit] = useState(DAYS_PAGE)
+  const categories = useStore((s) => s.categories, shallowArray)
+  const categoryOf = (id?: string) => (id ? categories.find((c) => c.id === id) : undefined)
 
   const days = useMemo(() => {
     const byDay = new Map<string, Day>()
@@ -142,9 +147,20 @@ export function TransactionList({ transactions, groupOf, onGroupClick, emptyText
                           </span>
                         </span>
 
-                        {t.tags && t.tags.length > 0 && (
+                        {(t.categoryId || (t.tags && t.tags.length > 0)) && (
                           <span className="txl__tags">
-                            {t.tags.map((id) => (
+                            {categoryOf(t.categoryId) && (
+                              <span
+                                onClick={(e) => {
+                                  if (!onCategoryClick) return
+                                  e.stopPropagation()
+                                  onCategoryClick(t.categoryId!)
+                                }}
+                              >
+                                <CategoryChip category={categoryOf(t.categoryId)!} />
+                              </span>
+                            )}
+                            {t.tags?.map((id) => (
                               <TagChip key={id} id={id} />
                             ))}
                           </span>

@@ -27,8 +27,9 @@ Then open http://localhost:5199.
 
 | Page | What it does |
 |---|---|
-| **Overview** | The one-page read: a quick-add bar, what's safe to spend this month, in / out / net against last month, budget rings, what's due in the next two weeks, cash flow, where this month's money went, and the year's write-offs. |
-| **Ledger** | The whole history, stacked by day with month and day totals, newest first. Click any row to edit it. Search, or filter by month, direction, tag or group. Hover any expense to mark it as a write-off in one click. |
+| **Overview** | Deliberately sparse: the quick-add bar, one card with what's safe to spend this month (in, out, still due, all-time savings), and what's due in the next two weeks. Everything else has its own page. |
+| **Ledger** | The whole history, stacked by day with month and day totals, newest first. Click any row to edit it. Search, or filter by month, direction, category or group. Hover any expense to mark it as a write-off in one click. |
+| **Categories** | Your own buckets — a business, a channel, a trip. Pick one across the top and get that category's finances on their own: net, earned, spent, this month, earned-vs-spent ring, month-by-month bars, where its money comes from and goes, and every entry filed under it. |
 | **Summary** | Two pies — where it comes from and where it goes — over this month, three months, the year or all time. Month-by-month cash flow. Then the estimates: where this month lands, a three-month forecast, and runway. |
 | **Budgets** | Progress rings — the tick on each ring is where an even pace would put you today. Offers limits for the groups you already spend on, and a six-month trend per group. |
 | **Subscriptions** | Everything on a schedule. Monthly and yearly totals, a 30-day timeline, "log payment" that advances the next date, pause / cancel, and suggestions for rhythms it spotted in the ledger. |
@@ -39,24 +40,29 @@ Then open http://localhost:5199.
 ## Logging money
 
 The quick-add bar at the top of Overview and Ledger is the fast path: pick
-Spent or Earned, type what it was and how much, press Enter. Today's date,
-nothing else to fill in. The grip button beside it (or **N** anywhere) opens
-the full form for a different date, a tag, something that repeats, or a note.
-Everything can be edited later by clicking it in the ledger.
+Spent or Earned, type what it was and how much, optionally pick a category,
+press Enter. Today's date, nothing else to fill in. The grip button beside it
+(or **N** anywhere) opens the full form for a different date, a new category,
+something that repeats, or a note. Everything can be edited later by clicking
+it in the ledger.
 
-## Tags
+## Categories
 
-Groups answer *what* an entry was; tags say something *about* it. There are
-three built in, and the app acts on each:
+Categories are the one thing you file by hand. Make one for anything you want
+to see on its own — "Silas AI", "Consulting", a trip — and anything you earn
+or spend can carry it. The **+ New** chip in the entry form makes one on the
+spot. A subscription's category is carried onto every payment logged from it.
+Removing a category leaves its entries in place, just uncategorised.
 
-| Tag | Used for |
-|---|---|
-| **Write-off** | Tax deductible. Drives the Taxes page. Toggle it from the form or straight from a ledger row. |
-| **Business** | Business spend and income, write-off or not. |
-| **One-off** | Won't happen again — kept out of the forecast. |
+Groups (Groceries, Fuel, Ad Revenue…) are still worked out automatically from
+titles, so the two never compete: groups say what a thing *was*, categories
+say what it was *for*.
 
-Anything else you type becomes a custom tag and is offered again next time.
-Tags on a subscription are carried onto every payment logged from it.
+## Write-offs
+
+Hover any expense in the ledger and hit the receipt icon to mark it as a
+write-off (tax deductible). That single tag drives the Taxes page. Nothing
+else needs tagging.
 
 ## Budgets
 
