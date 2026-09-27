@@ -39,7 +39,7 @@ Then open http://localhost:5199.
 
 ## Logging money
 
-The quick-add bar at the top of Overview and Ledger is the fast path: pick
+The quick-add bar at the top of Overview is the fast path: pick
 Spent or Earned, type what it was and how much, optionally pick a category,
 press Enter. Today's date, nothing else to fill in. The grip button beside it
 (or **N** anywhere) opens the full form for a different date, a new category,

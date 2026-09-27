@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/Button'
 import { MonthPicker } from '@/components/MonthPicker'
 import { TagChip } from '@/components/Tags'
 import { CategoryChip } from '@/components/Categories'
-import { QuickAdd } from '@/components/QuickAdd'
 import { Icon } from '@/components/Icon'
 import { shallowArray, useStore } from '@/lib/store'
 import { ui, type LedgerFilter } from '@/lib/ui'
@@ -111,8 +110,6 @@ export function LedgerPage() {
         </>
       }
     >
-      <QuickAdd />
-
       {transactions.length === 0 ? (
         <motion.div
           className="card lg__blank"
@@ -126,10 +123,14 @@ export function LedgerPage() {
             </span>
             <h2 className="empty__title">Nothing logged yet</h2>
             <p className="empty__text">
-              Type what it was and how much in the bar above and press Enter.
-              Money Map groups similar entries on its own, so the charts fill
-              in as you go — you never make a category.
+              Add a title, an amount and a date. Money Map groups similar
+              entries on its own, so the charts fill in as you go.
             </p>
+            <div style={{ marginTop: 18 }}>
+              <Button variant="primary" icon="plus" onClick={() => ui.openComposer()}>
+                Add your first entry
+              </Button>
+            </div>
           </div>
         </motion.div>
       ) : (
@@ -139,7 +140,7 @@ export function LedgerPage() {
             className="lg__bar"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring.calm, delay: 0.05 }}
+            transition={spring.calm}
           >
             <label className="lg__search">
               <Icon name="search" size={15} strokeWidth={1.9} />
